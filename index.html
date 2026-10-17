@@ -7,22 +7,37 @@
 <style>
 :root{--bg:#f5f7f4;--paper:#fff;--ink:#202923;--muted:#778078;--line:#e3e9e2;--green2:#286447;--accent:#e8f4eb;--shadow:0 8px 28px rgba(35,57,42,.06)}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
-header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:14px clamp(14px,3vw,32px);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+body{position:relative;min-height:100vh;margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+
+/* Header + toolbar */
+header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:12px clamp(14px,3vw,32px)}
+.head-row,.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .brand{font-size:17px;font-weight:800;letter-spacing:-.4px;margin-right:auto}
 .brand span{color:var(--green2)}
-.toplink,.btn{border:1px solid var(--line);border-radius:10px;padding:9px 14px;background:#fff;color:var(--ink);font:inherit;font-weight:700;text-decoration:none;cursor:pointer}
+.toplink,.btn{border:1px solid var(--line);border-radius:10px;padding:8px 13px;background:#fff;color:var(--ink);font:inherit;font-weight:700;text-decoration:none;cursor:pointer}
 .toplink:hover,.btn:hover{background:var(--accent)}
 .btn.primary{background:var(--green2);color:#fff;border-color:var(--green2)}
 .btn.primary:hover{filter:brightness(1.08);background:var(--green2)}
+.btn.small{padding:6px 10px;font-size:12px}
+.toolbar{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);font-size:12px}
+.toolbar .target{font-weight:800;color:var(--green2);background:var(--accent);padding:5px 9px;border-radius:7px;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toolbar label{display:flex;align-items:center;gap:6px;font-weight:700;color:var(--muted)}
+.toolbar select{font:inherit;border:1px solid var(--line);border-radius:8px;padding:5px 7px;background:#fff;color:var(--ink)}
+.toolbar input[type=color]{width:32px;height:28px;padding:0;border:1px solid var(--line);border-radius:7px;background:#fff;cursor:pointer}
+.swatches{display:flex;gap:5px}
+.swatch{width:20px;height:20px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px var(--line);cursor:pointer;padding:0}
+.swatch:hover{transform:scale(1.15)}
+
 main{max-width:1600px;margin:0 auto;padding:24px clamp(12px,2vw,28px) 50px}
 .intro{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap}
 .intro h1{font-size:clamp(24px,3vw,34px);letter-spacing:-1px;margin:0 0 5px}
 .intro p{color:var(--muted);margin:0}
 .connection{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:7px}
-.dot{width:8px;height:8px;border-radius:50%;background:#d8a13a}
+.dot{width:8px;height:8px;border-radius:50%;background:#d8a13a;flex:none}
 .dot.ok{background:#2b9a60}
 .dot.bad{background:#d85858}
+
+/* Calendar */
 .months{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:start}
 .month{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:var(--shadow);min-width:0}
 .month-head{display:flex;justify-content:space-between;align-items:center;margin:0 0 12px}
@@ -36,12 +51,25 @@ main{max-width:1600px;margin:0 auto;padding:24px clamp(12px,2vw,28px) 50px}
 .day.today{border-color:#6eae84;background:#fbfffc}
 .day-num{font-size:11px;font-weight:800;color:#536057}
 .day textarea,.week-note textarea{font-family:inherit;font-size:11px;line-height:1.35;resize:vertical;min-height:64px;width:100%;flex:1;border:0;outline:0;border-radius:5px;background:#f7f9f6;padding:5px;color:var(--ink)}
-.day textarea:focus{background:#eef7f0;box-shadow:inset 0 0 0 1px #b8d8c2}
+.day textarea:focus,.day textarea.sel{background:#eef7f0;box-shadow:inset 0 0 0 1px #b8d8c2}
 .week-note{min-width:0;min-height:118px;border:1px dashed #cbd9ce;border-radius:9px;background:#fbfdfb;padding:5px;display:flex;flex-direction:column;gap:5px}
 .week-note-label{font-size:10px;color:var(--green2);font-weight:800}
 .week-note textarea{background:#f1f7f2}
-.week-note textarea:focus{background:#e8f4eb;box-shadow:inset 0 0 0 1px #b8d8c2}
-textarea::placeholder{color:#a0aaa1}
+.week-note textarea:focus,.week-note textarea.sel{background:#e8f4eb;box-shadow:inset 0 0 0 1px #b8d8c2}
+.day textarea::placeholder,.week-note textarea::placeholder{color:#a0aaa1}
+
+/* Post-its */
+#postitLayer{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.postit{position:absolute;width:96px;height:96px;pointer-events:auto;display:flex;flex-direction:column;border-radius:2px 2px 16px 2px;box-shadow:0 6px 14px rgba(0,0,0,.18),0 1px 2px rgba(0,0,0,.12);z-index:20}
+.postit.dragging{box-shadow:0 14px 26px rgba(0,0,0,.28);transform:rotate(2deg)}
+.pi-bar{height:22px;display:flex;align-items:center;justify-content:space-between;padding:0 6px;background:rgba(0,0,0,.09);cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;font-size:12px;letter-spacing:1px;opacity:.85}
+.pi-bar:active{cursor:grabbing}
+.pi-color{-webkit-appearance:none;appearance:none;width:15px;height:15px;padding:0;border:1.5px solid rgba(0,0,0,.4);border-radius:50%;background:none;cursor:pointer}
+.pi-color::-webkit-color-swatch-wrapper{padding:0}
+.pi-color::-webkit-color-swatch{border:0;border-radius:50%}
+.pi-color::-moz-color-swatch{border:0;border-radius:50%}
+.pi-text{flex:1;width:100%;min-height:0;border:0;outline:0;resize:none;background:transparent;padding:6px;text-align:center;font:700 17px/1.25 "Segoe Print","Bradley Hand","Comic Sans MS",cursive;overflow:hidden}
+
 @media(max-width:1380px){
   .months{grid-template-columns:1fr}
   .day,.week-note{min-height:95px}
@@ -56,25 +84,42 @@ textarea::placeholder{color:#a0aaa1}
 </head>
 <body>
 <header>
-  <div class="brand">Daily<span>space</span> <span style="color:#9aa39a;font-weight:500">/ 2026</span></div>
-  <button class="btn primary" id="saveNow" type="button">Simpan</button>
-  <button class="btn" id="exportBtn" type="button">Ekspor</button>
-  <button class="btn" id="importBtn" type="button">Impor</button>
-  <input type="file" id="importFile" accept="application/json" hidden>
-  <a class="toplink" href="https://pxnulis.vercel.app" target="_blank" rel="noopener noreferrer">pxnulis ↗</a>
-  <a class="toplink" href="https://pxnulishandal.vercel.app" target="_blank" rel="noopener noreferrer">pxnulishandal ↗</a>
+  <div class="head-row">
+    <div class="brand">Daily<span>space</span> <span style="color:#9aa39a;font-weight:500">/ 2026</span></div>
+    <button class="btn primary" id="saveNow" type="button">Simpan</button>
+    <button class="btn" id="exportBtn" type="button">Ekspor</button>
+    <button class="btn" id="importBtn" type="button">Impor</button>
+    <input type="file" id="importFile" accept="application/json" hidden>
+    <a class="toplink" href="https://pxnulis.vercel.app" target="_blank" rel="noopener noreferrer">pxnulis ↗</a>
+    <a class="toplink" href="https://pxnulishandal.vercel.app" target="_blank" rel="noopener noreferrer">pxnulishandal ↗</a>
+  </div>
+  <div class="toolbar" id="toolbar">
+    <span class="target" id="targetLabel">Klik sebuah kotak…</span>
+    <label>Ukuran
+      <select id="fontSize">
+        <option>9</option><option>10</option><option>11</option><option>12</option><option>13</option>
+        <option>14</option><option>16</option><option>18</option><option>20</option><option>24</option><option>28</option>
+      </select>
+    </label>
+    <label>Warna <input type="color" id="fontColor" value="#202923"></label>
+    <div class="swatches" id="swatches"></div>
+    <label><input type="checkbox" id="scopeAll"> Semua kotak</label>
+    <button class="btn small" id="resetFmt" type="button">Reset</button>
+  </div>
 </header>
 
 <main>
   <div class="intro">
     <div>
       <h1>Calendar workspace</h1>
-      <p>Oktober — Desember 2026 · Tulis di kotak tanggal atau kotak mingguan.</p>
+      <p>Oktober — Desember 2026 · Tulis di kotak tanggal atau kotak mingguan. Seret post-it ke mana saja.</p>
     </div>
     <div class="connection"><span id="statusDot" class="dot"></span><span id="statusText">Menyiapkan koneksi…</span></div>
   </div>
   <section id="calendar" class="months" aria-label="Calendar October to December 2026"></section>
 </main>
+
+<div id="postitLayer" aria-label="Post-it"></div>
 
 <script>
 /* Supabase: use the Project URL and the publishable (anon) key, NEVER the service_role key. */
@@ -82,13 +127,26 @@ const SUPABASE_URL = "https://gjyeknwtoofpuvoaftfj.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_HBf14rn-fWP8AZ_OaLFfag_V6qNKjk5";
 const API_TABLE = "calendar_workspace";
 
+const POSTIT_COUNT = 8;
+const POSTIT_SIZE = 96;
+const POSTIT_MAX = 7;
+const POSTIT_COLORS = ["#fff176", "#ffab91", "#a5d6a7", "#90caf9", "#f48fb1", "#ce93d8", "#ffe082", "#80deea"];
+const TEXT_SWATCHES = ["#202923", "#c0392b", "#d9822b", "#286447", "#2563eb", "#7c3aed"];
+const DEFAULT_TEXT_COLOR = "#202923";
+const DEFAULT_FONT_SIZE = 11;
+
 const $ = (s) => document.querySelector(s);
 const statusText = $("#statusText");
 const statusDot = $("#statusDot");
 
+/* All extra data lives inside `entries` (under __styles and __postits), so the Supabase table needs no change. */
 const state = { entries: {}, notes: "" };
 let saveTimer = null;
 let canSave = false; // only true after a successful load, so a failed load can never overwrite cloud data
+let activeKey = null;
+let activeLabel = "";
+let zCounter = 20;
+const postEls = [];
 
 const months = [
   { year: 2026, month: 9,  name: "Oktober" },
@@ -106,6 +164,22 @@ function dayKey(y, m, d) {
   return `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
 }
 
+/* Make sure the extra structures always exist and are valid, also after a load or an import. */
+function ensureMeta() {
+  const e = state.entries;
+  if (!e.__styles || typeof e.__styles !== "object" || Array.isArray(e.__styles)) e.__styles = {};
+  if (!Array.isArray(e.__postits)) e.__postits = [];
+  for (let i = 0; i < POSTIT_COUNT; i++) {
+    const p = e.__postits[i] || {};
+    e.__postits[i] = {
+      x: Number.isFinite(p.x) ? p.x : null,
+      y: Number.isFinite(p.y) ? p.y : null,
+      color: typeof p.color === "string" && /^#[0-9a-fA-F]{6}$/.test(p.color) ? p.color : POSTIT_COLORS[i],
+      text: String(p.text || "").slice(0, POSTIT_MAX)
+    };
+  }
+}
+
 function fillTextareas() {
   document.querySelectorAll("textarea[data-key]").forEach((el) => {
     el.value = state.entries[el.dataset.key] || "";
@@ -115,6 +189,15 @@ function fillTextareas() {
 function onEdit(key, value) {
   state.entries[key] = value;
   scheduleSave();
+}
+
+/* ---------- Calendar ---------- */
+function selectCell(area, label) {
+  document.querySelectorAll("textarea.sel").forEach((el) => el.classList.remove("sel"));
+  area.classList.add("sel");
+  activeKey = area.dataset.key;
+  activeLabel = label;
+  syncControls();
 }
 
 function buildCalendar() {
@@ -159,6 +242,7 @@ function buildCalendar() {
           continue;
         }
         const key = dayKey(year, month, d);
+        const label = `${d} ${name} ${year}`;
         const cell = document.createElement("div");
         cell.className = "day";
         if (now.getFullYear() === year && now.getMonth() === month && now.getDate() === d) {
@@ -170,13 +254,15 @@ function buildCalendar() {
         const area = document.createElement("textarea");
         area.placeholder = "Tulis…";
         area.dataset.key = key;
-        area.setAttribute("aria-label", `${d} ${name} ${year}`);
+        area.setAttribute("aria-label", label);
         area.addEventListener("input", () => onEdit(key, area.value));
+        area.addEventListener("focus", () => selectCell(area, label));
         cell.append(num, area);
         days.append(cell);
       }
 
       const wkKey = `week-${year}-${String(month + 1).padStart(2, "0")}-${week + 1}`;
+      const wkLabel = `${name} · minggu ${week + 1}`;
       const wk = document.createElement("div");
       wk.className = "week-note";
       const label = document.createElement("div");
@@ -185,8 +271,9 @@ function buildCalendar() {
       const wkArea = document.createElement("textarea");
       wkArea.placeholder = "Catatan…";
       wkArea.dataset.key = wkKey;
-      wkArea.setAttribute("aria-label", `${name} minggu ${week + 1}`);
+      wkArea.setAttribute("aria-label", wkLabel);
       wkArea.addEventListener("input", () => onEdit(wkKey, wkArea.value));
+      wkArea.addEventListener("focus", () => selectCell(wkArea, wkLabel));
       wk.append(label, wkArea);
       days.append(wk);
     }
@@ -196,6 +283,205 @@ function buildCalendar() {
   });
 }
 
+/* ---------- Text size and color ---------- */
+function getStyle(key) {
+  const s = state.entries.__styles || {};
+  return { ...(s.__all || {}), ...(s[key] || {}) };
+}
+
+function paint(el) {
+  const st = getStyle(el.dataset.key);
+  el.style.fontSize = st.size ? st.size + "px" : "";
+  el.style.color = st.color || "";
+}
+
+function paintAll() {
+  document.querySelectorAll("textarea[data-key]").forEach(paint);
+}
+
+function syncControls() {
+  const all = $("#scopeAll").checked;
+  const styles = state.entries.__styles || {};
+  const st = all ? (styles.__all || {}) : getStyle(activeKey);
+  $("#targetLabel").textContent = all ? "Semua kotak" : (activeKey ? activeLabel : "Klik sebuah kotak…");
+  $("#fontSize").value = String(st.size || DEFAULT_FONT_SIZE);
+  $("#fontColor").value = st.color || DEFAULT_TEXT_COLOR;
+}
+
+function setFormat(patch) {
+  const all = $("#scopeAll").checked;
+  if (!all && !activeKey) {
+    setStatus("Pilih satu kotak dulu, atau centang “Semua kotak”.");
+    return;
+  }
+  const styles = state.entries.__styles;
+  if (all) {
+    styles.__all = { ...(styles.__all || {}), ...patch };
+    // Remove per-cell overrides of the properties that were just set for everyone.
+    Object.keys(styles).forEach((k) => {
+      if (k === "__all") return;
+      Object.keys(patch).forEach((prop) => delete styles[k][prop]);
+      if (!Object.keys(styles[k]).length) delete styles[k];
+    });
+    paintAll();
+  } else {
+    styles[activeKey] = { ...(styles[activeKey] || {}), ...patch };
+    const el = document.querySelector(`textarea[data-key="${activeKey}"]`);
+    if (el) paint(el);
+  }
+  scheduleSave();
+}
+
+function buildToolbar() {
+  const box = $("#swatches");
+  TEXT_SWATCHES.forEach((c) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "swatch";
+    b.style.background = c;
+    b.title = c;
+    b.addEventListener("mousedown", (e) => e.preventDefault()); // keep the caret in the cell
+    b.addEventListener("click", () => { setFormat({ color: c }); $("#fontColor").value = c; });
+    box.append(b);
+  });
+  $("#fontSize").addEventListener("change", (e) => setFormat({ size: Number(e.target.value) }));
+  $("#fontColor").addEventListener("input", (e) => setFormat({ color: e.target.value }));
+  $("#scopeAll").addEventListener("change", syncControls);
+  $("#resetFmt").addEventListener("click", () => {
+    if ($("#scopeAll").checked) {
+      state.entries.__styles = {};
+      paintAll();
+    } else if (activeKey) {
+      delete state.entries.__styles[activeKey];
+      const el = document.querySelector(`textarea[data-key="${activeKey}"]`);
+      if (el) paint(el);
+    } else {
+      setStatus("Pilih satu kotak dulu, atau centang “Semua kotak”.");
+      return;
+    }
+    syncControls();
+    scheduleSave();
+  });
+}
+
+/* ---------- Post-its ---------- */
+function textOn(hex) {
+  const n = parseInt(hex.slice(1), 16);
+  const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+  return (0.299 * r + 0.587 * g + 0.114 * b) > 150 ? "#2b2b2b" : "#ffffff";
+}
+
+function clampPos(x, y) {
+  const doc = document.documentElement;
+  const maxX = Math.max(0, doc.scrollWidth - POSTIT_SIZE);
+  const maxY = Math.max(0, doc.scrollHeight - POSTIT_SIZE);
+  return { x: Math.min(Math.max(0, x), maxX), y: Math.min(Math.max(0, y), maxY) };
+}
+
+function defaultPos(i) {
+  const gap = 14, cols = 4;
+  const vw = document.documentElement.clientWidth;
+  return {
+    x: vw - cols * (POSTIT_SIZE + gap) - 8 + (i % cols) * (POSTIT_SIZE + gap),
+    y: 170 + Math.floor(i / cols) * (POSTIT_SIZE + gap)
+  };
+}
+
+function paintPostit(i) {
+  const p = state.entries.__postits[i];
+  const el = postEls[i];
+  const pos = clampPos(...Object.values(p.x === null || p.y === null ? defaultPos(i) : { x: p.x, y: p.y }));
+  el.root.style.left = pos.x + "px";
+  el.root.style.top = pos.y + "px";
+  el.root.style.background = p.color;
+  el.text.style.color = textOn(p.color);
+  el.bar.style.color = textOn(p.color);
+  el.color.value = p.color;
+  el.text.value = p.text;
+}
+
+function renderPostits() {
+  for (let i = 0; i < POSTIT_COUNT; i++) paintPostit(i);
+}
+
+function buildPostits() {
+  const layer = $("#postitLayer");
+  for (let i = 0; i < POSTIT_COUNT; i++) {
+    const root = document.createElement("div");
+    root.className = "postit";
+
+    const bar = document.createElement("div");
+    bar.className = "pi-bar";
+    bar.title = "Seret untuk memindahkan";
+    const grip = document.createElement("span");
+    grip.textContent = "⋮⋮";
+    const color = document.createElement("input");
+    color.type = "color";
+    color.className = "pi-color";
+    color.title = "Ganti warna";
+    color.setAttribute("aria-label", `Warna post-it ${i + 1}`);
+    bar.append(grip, color);
+
+    const text = document.createElement("textarea");
+    text.className = "pi-text";
+    text.maxLength = POSTIT_MAX;
+    text.spellcheck = false;
+    text.setAttribute("aria-label", `Post-it ${i + 1}`);
+
+    root.append(bar, text);
+    layer.append(root);
+    postEls.push({ root, bar, color, text });
+
+    text.addEventListener("input", () => {
+      const v = text.value.slice(0, POSTIT_MAX);
+      if (v !== text.value) text.value = v;
+      state.entries.__postits[i].text = v;
+      scheduleSave();
+    });
+
+    color.addEventListener("input", () => {
+      state.entries.__postits[i].color = color.value;
+      root.style.background = color.value;
+      text.style.color = textOn(color.value);
+      bar.style.color = textOn(color.value);
+      scheduleSave();
+    });
+
+    /* Dragging works from the top bar only, so the textarea stays editable. */
+    bar.addEventListener("pointerdown", (e) => {
+      if (e.target === color) return;
+      e.preventDefault();
+      bar.setPointerCapture(e.pointerId);
+      root.classList.add("dragging");
+      root.style.zIndex = ++zCounter;
+      const startX = e.pageX, startY = e.pageY;
+      const originX = root.offsetLeft, originY = root.offsetTop;
+
+      const move = (ev) => {
+        const pos = clampPos(originX + ev.pageX - startX, originY + ev.pageY - startY);
+        root.style.left = pos.x + "px";
+        root.style.top = pos.y + "px";
+      };
+      const up = (ev) => {
+        bar.removeEventListener("pointermove", move);
+        bar.removeEventListener("pointerup", up);
+        bar.removeEventListener("pointercancel", up);
+        try { bar.releasePointerCapture(ev.pointerId); } catch (_) {}
+        root.classList.remove("dragging");
+        state.entries.__postits[i].x = root.offsetLeft;
+        state.entries.__postits[i].y = root.offsetTop;
+        scheduleSave();
+      };
+      bar.addEventListener("pointermove", move);
+      bar.addEventListener("pointerup", up);
+      bar.addEventListener("pointercancel", up);
+    });
+  }
+}
+
+window.addEventListener("resize", renderPostits);
+
+/* ---------- Supabase ---------- */
 function configReady() {
   return /^https:\/\/.+\.supabase\.co$/.test(SUPABASE_URL) &&
     SUPABASE_ANON_KEY.length > 20 &&
@@ -220,6 +506,14 @@ async function request(path, options = {}) {
   return res;
 }
 
+function refreshUI() {
+  ensureMeta();
+  fillTextareas();
+  paintAll();
+  renderPostits();
+  syncControls();
+}
+
 async function loadData() {
   if (!configReady()) {
     setStatus("Isi konfigurasi Supabase");
@@ -233,7 +527,7 @@ async function loadData() {
       state.entries = rows[0].entries || {};
       state.notes = rows[0].notes || "";
     }
-    fillTextareas();
+    refreshUI();
     canSave = true;
     setStatus("Terhubung · data dimuat", "ok");
   } catch (e) {
@@ -277,11 +571,11 @@ async function saveData() {
   }
 }
 
-/* Buttons: each handler is guarded, so a missing element can never stop the calendar from rendering. */
+/* ---------- Buttons (each handler is guarded) ---------- */
 $("#saveNow")?.addEventListener("click", () => { clearTimeout(saveTimer); saveData(); });
 
 $("#exportBtn")?.addEventListener("click", () => {
-  const data = { format: "dailyspace-calendar-v1", entries: state.entries, notes: state.notes || "" };
+  const data = { format: "dailyspace-calendar-v2", entries: state.entries, notes: state.notes || "" };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
@@ -300,7 +594,7 @@ $("#importFile")?.addEventListener("change", async (e) => {
     if (!data || typeof data !== "object") throw new Error("Format tidak valid");
     state.entries = data.entries || {};
     state.notes = data.notes || "";
-    fillTextareas();
+    refreshUI();
     scheduleSave();
     setStatus("File diimpor");
   } catch (err) {
@@ -310,7 +604,12 @@ $("#importFile")?.addEventListener("change", async (e) => {
   }
 });
 
+/* ---------- Start ---------- */
+ensureMeta();
 buildCalendar();
+buildToolbar();
+buildPostits();
+refreshUI();
 loadData();
 </script>
 </body>
