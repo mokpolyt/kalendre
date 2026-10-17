@@ -21,8 +21,6 @@ header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.96);backdr
 .btn.small{padding:6px 10px;font-size:12px}
 .toolbar{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);font-size:12px}
 .toolbar .target{font-weight:800;color:var(--green2);background:var(--accent);padding:5px 9px;border-radius:7px;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.view-switch{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:800;color:var(--muted)}
-.view-switch select{font:inherit;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:#fff;color:var(--ink);cursor:pointer}
 .toolbar label{display:flex;align-items:center;gap:6px;font-weight:700;color:var(--muted)}
 .toolbar select{font:inherit;border:1px solid var(--line);border-radius:8px;padding:5px 7px;background:#fff;color:var(--ink)}
 .toolbar input[type=color]{width:32px;height:28px;padding:0;border:1px solid var(--line);border-radius:7px;background:#fff;cursor:pointer}
@@ -72,35 +70,44 @@ main{max-width:1600px;margin:0 auto;padding:24px clamp(12px,2vw,28px) 50px}
 .pi-color::-moz-color-swatch{border:0;border-radius:50%}
 .pi-text{flex:1;width:100%;min-height:0;border:0;outline:0;resize:none;background:transparent;padding:6px;text-align:center;font:700 17px/1.25 "Segoe Print","Bradley Hand","Comic Sans MS",cursive;overflow:hidden}
 
+/* View switch */
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+.seg button{border:0;background:#fff;color:var(--muted);font:inherit;font-weight:700;padding:8px 13px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button.on{background:var(--green2);color:#fff}
+.wd-name,.lbl-m{display:none}
+
+/* Desktop view */
+body.view-desktop{min-width:980px}
 @media(max-width:1380px){
   body.view-desktop .months{grid-template-columns:1fr}
   body.view-desktop .day,body.view-desktop .week-note{min-height:95px}
   body.view-desktop .day textarea,body.view-desktop .week-note textarea{min-height:45px}
 }
-@media(max-width:600px){
-  header .head-row{align-items:stretch}
-  .brand{width:100%}
-  .view-switch{flex:1}
-  .view-switch select{width:100%}
-  body.view-desktop .weekdays,body.view-desktop .days{grid-template-columns:repeat(7,minmax(0,1fr)) minmax(54px,.8fr)}
-  body.view-desktop .day,body.view-desktop .week-note{padding:3px;min-height:75px}
-  body.view-desktop .day textarea,body.view-desktop .week-note textarea{font-size:10px;min-height:35px;padding:3px}
-  body.view-mobile .weekdays,body.view-mobile .days{grid-template-columns:repeat(4,minmax(0,1fr))}
-  body.view-mobile .day,body.view-mobile .week-note{min-height:90px}
-  body.view-mobile .day textarea,body.view-mobile .week-note textarea{min-height:42px}
-}
+
+/* Mobile view: 4 columns per row -> Min Sen Sel Rab / Kam Jum Sab Catatan */
+body.view-mobile .months{grid-template-columns:1fr}
+body.view-mobile .weekdays{display:none}
+body.view-mobile .days{grid-template-columns:repeat(4,minmax(0,1fr))}
+body.view-mobile .day,body.view-mobile .week-note{min-height:92px}
+body.view-mobile .day textarea,body.view-mobile .week-note textarea{min-height:48px}
+body.view-mobile .day-num{display:flex;flex-direction:column;line-height:1.15}
+body.view-mobile .wd-name{display:block;font-size:9px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.2px}
+body.view-mobile .lbl-d{display:none}
+body.view-mobile .lbl-m{display:inline}
+body.view-mobile .week-note{border-style:solid;background:#f4faf5}
+body.view-mobile main{padding-left:8px;padding-right:8px}
+body.view-mobile .month{padding:10px}
 </style>
 </head>
 <body>
 <header>
   <div class="head-row">
     <div class="brand">Daily<span>space</span> <span style="color:#9aa39a;font-weight:500">/ 2026</span></div>
-    <label class="view-switch">Tampilan
-      <select id="viewMode" aria-label="Pilih tampilan kalender">
-        <option value="desktop">Desktop view</option>
-        <option value="mobile">Mobile view</option>
-      </select>
-    </label>
+    <div class="seg" id="viewSwitch" role="group" aria-label="Tampilan">
+      <button type="button" data-view="mobile">📱 Mobile</button>
+      <button type="button" data-view="desktop">🖥 Desktop</button>
+    </div>
     <button class="btn primary" id="saveNow" type="button">Simpan</button>
     <button class="btn" id="exportBtn" type="button">Ekspor</button>
     <button class="btn" id="importBtn" type="button">Impor</button>
@@ -169,6 +176,7 @@ const months = [
   { year: 2026, month: 11, name: "Desember" }
 ];
 const weekdays = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+const weekdaysFull = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
 
 function setStatus(text, kind = "") {
   statusText.textContent = text;
@@ -265,7 +273,7 @@ function buildCalendar() {
         }
         const num = document.createElement("div");
         num.className = "day-num";
-        num.textContent = d;
+        num.innerHTML = `<span class="wd-name">${weekdaysFull[col]}</span><span>${d}</span>`;
         const area = document.createElement("textarea");
         area.placeholder = "Tulis…";
         area.dataset.key = key;
@@ -282,7 +290,7 @@ function buildCalendar() {
       wk.className = "week-note";
       const label = document.createElement("div");
       label.className = "week-note-label";
-      label.textContent = `Minggu ${week + 1}`;
+      label.innerHTML = `<span class="lbl-d">Minggu ${week + 1}</span><span class="lbl-m">Catatan</span>`;
       const wkArea = document.createElement("textarea");
       wkArea.placeholder = "Catatan…";
       wkArea.dataset.key = wkKey;
@@ -348,16 +356,6 @@ function setFormat(patch) {
 }
 
 function buildToolbar() {
-  const viewMode = $("#viewMode");
-  const applyViewMode = (mode) => {
-    document.body.classList.toggle("view-mobile", mode === "mobile");
-    document.body.classList.toggle("view-desktop", mode !== "mobile");
-    viewMode.value = mode === "mobile" ? "mobile" : "desktop";
-    renderPostits();
-  };
-  viewMode.addEventListener("change", () => applyViewMode(viewMode.value));
-  applyViewMode("desktop");
-
   const box = $("#swatches");
   TEXT_SWATCHES.forEach((c) => {
     const b = document.createElement("button");
@@ -629,12 +627,29 @@ $("#importFile")?.addEventListener("change", async (e) => {
   }
 });
 
+/* ---------- View switch (mobile / desktop) ---------- */
+function applyView(v, save) {
+  document.body.classList.toggle("view-mobile", v === "mobile");
+  document.body.classList.toggle("view-desktop", v === "desktop");
+  document.querySelectorAll("#viewSwitch button").forEach((b) => b.classList.toggle("on", b.dataset.view === v));
+  if (save) { try { localStorage.setItem("calendarView", v); } catch (_) {} }
+  renderPostits();
+}
+function initView() {
+  let v = null;
+  try { v = localStorage.getItem("calendarView"); } catch (_) {}
+  if (v !== "mobile" && v !== "desktop") v = window.matchMedia("(max-width:700px)").matches ? "mobile" : "desktop";
+  document.querySelectorAll("#viewSwitch button").forEach((b) => b.addEventListener("click", () => applyView(b.dataset.view, true)));
+  applyView(v, false);
+}
+
 /* ---------- Start ---------- */
 ensureMeta();
 buildCalendar();
 buildToolbar();
 buildPostits();
 refreshUI();
+initView();
 loadData();
 </script>
 </body>
