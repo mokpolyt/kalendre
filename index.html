@@ -110,13 +110,11 @@ async function loadData(){
   const rows=await res.json();
   if(rows.length){state.entries=rows[0].entries||{};state.notes=rows[0].notes||""}
   document.querySelectorAll("textarea[data-date], textarea[data-week]").forEach(el=>el.value=state.entries[el.dataset.date||el.dataset.week]||"");
-  $("#globalNotes").value=state.notes;
   setStatus("Terhubung · data tersimpan","ok");notesStatus.textContent="Data dimuat";loading=false;
  }catch(e){loading=false;setStatus("Koneksi gagal","bad");notesStatus.textContent=e.message;console.error(e)}
 }
 function scheduleSave(){if(loading)return;notesStatus.textContent="Perubahan belum disimpan…";clearTimeout(saveTimer);saveTimer=setTimeout(saveData,700)}
 async function saveData(){
- state.notes=$("#globalNotes").value;
  if(!configReady()){notesStatus.textContent="Belum tersimpan ke cloud — isi URL dan key";return}
  try{
   notesStatus.textContent="Menyimpan…";
@@ -125,10 +123,9 @@ async function saveData(){
   setStatus("Terhubung · data tersimpan","ok");
  }catch(e){notesStatus.textContent="Gagal menyimpan: "+e.message;setStatus("Gagal menyimpan","bad");console.error(e)}
 }
-$("#globalNotes").addEventListener("input",scheduleSave);
 $("#saveNow").addEventListener("click",saveData);
 $("#exportBtn").addEventListener("click",()=>{
- const data={format:"dailyspace-calendar-v1",entries:state.entries,notes:$("#globalNotes").value};
+ const data={format:"dailyspace-calendar-v1",entries:state.entries,notes:state.notes||""};
  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="calendar-workspace-2026.json";a.click();URL.revokeObjectURL(a.href);
 });
@@ -138,7 +135,7 @@ $("#importFile").addEventListener("change",async e=>{
  try{const data=JSON.parse(await file.text());if(!data||typeof data!=="object")throw Error("Format tidak valid");
  state.entries=data.entries||{};state.notes=data.notes||"";
  document.querySelectorAll("textarea[data-date], textarea[data-week]").forEach(el=>el.value=state.entries[el.dataset.date||el.dataset.week]||"");
- $("#globalNotes").value=state.notes;scheduleSave();notesStatus.textContent="File diimpor";
+ scheduleSave();notesStatus.textContent="File diimpor";
  }catch(err){alert("Tidak bisa membaca JSON: "+err.message)}finally{e.target.value=""}
 });
 buildCalendar();loadData();
