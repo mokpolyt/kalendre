@@ -5,140 +5,313 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Calendar Workspace · Oct–Dec 2026</title>
 <style>
-:root{--bg:#f5f7f4;--paper:#fff;--ink:#202923;--muted:#778078;--line:#e3e9e2;--green:#dcefe2;--green2:#286447;--accent:#e8f4eb;--shadow:0 8px 28px rgba(35,57,42,.06)}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:14px clamp(14px,3vw,32px);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.brand{font-size:17px;font-weight:800;letter-spacing:-.4px;margin-right:auto}.brand span{color:var(--green2)}
-.toplink{border:1px solid var(--line);border-radius:10px;padding:9px 14px;background:white;color:var(--ink);font-weight:700;text-decoration:none}.toplink:hover{background:var(--accent)}
+:root{--bg:#f5f7f4;--paper:#fff;--ink:#202923;--muted:#778078;--line:#e3e9e2;--green2:#286447;--accent:#e8f4eb;--shadow:0 8px 28px rgba(35,57,42,.06)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:14px clamp(14px,3vw,32px);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.brand{font-size:17px;font-weight:800;letter-spacing:-.4px;margin-right:auto}
+.brand span{color:var(--green2)}
+.toplink,.btn{border:1px solid var(--line);border-radius:10px;padding:9px 14px;background:#fff;color:var(--ink);font:inherit;font-weight:700;text-decoration:none;cursor:pointer}
+.toplink:hover,.btn:hover{background:var(--accent)}
+.btn.primary{background:var(--green2);color:#fff;border-color:var(--green2)}
+.btn.primary:hover{filter:brightness(1.08);background:var(--green2)}
 main{max-width:1600px;margin:0 auto;padding:24px clamp(12px,2vw,28px) 50px}
-.intro{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap}.intro h1{font-size:clamp(24px,3vw,34px);letter-spacing:-1px;margin:0 0 5px}.intro p{color:var(--muted);margin:0}
-.connection{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:7px}.dot{width:8px;height:8px;border-radius:50%;background:#d8a13a}.dot.ok{background:#2b9a60}.dot.bad{background:#d85858}
-.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;align-items:start}
-.months{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.intro{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.intro h1{font-size:clamp(24px,3vw,34px);letter-spacing:-1px;margin:0 0 5px}
+.intro p{color:var(--muted);margin:0}
+.connection{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:7px}
+.dot{width:8px;height:8px;border-radius:50%;background:#d8a13a}
+.dot.ok{background:#2b9a60}
+.dot.bad{background:#d85858}
+.months{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:start}
 .month{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:var(--shadow);min-width:0}
-.month-head{display:flex;justify-content:space-between;align-items:center;margin:0 0 12px}.month-head h2{font-size:18px;letter-spacing:-.5px;margin:0}.year{font-size:11px;color:var(--muted);background:#f2f5f1;padding:4px 7px;border-radius:7px}
-.weekdays,.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr)) minmax(74px,1.25fr);gap:4px}.weekdays div{text-align:center;font-size:10px;font-weight:800;color:var(--muted);padding:5px 0}.weekdays .week-note-head{color:var(--green2);background:var(--accent);border-radius:6px}
-.day{min-width:0;min-height:118px;border:1px solid var(--line);border-radius:9px;padding:5px;background:#fff;display:flex;flex-direction:column;gap:5px}.day.empty{background:transparent;border-color:transparent}.day.today{border-color:#6eae84;background:#fbfffc}
-.day-num{font-size:11px;font-weight:800;color:#536057}.day textarea{font:11px/1.35 inherit;font-family:inherit;resize:vertical;min-height:64px;width:100%;flex:1;border:0;outline:0;border-radius:5px;background:#f7f9f6;padding:5px;color:var(--ink)}.day textarea:focus{background:#eef7f0;box-shadow:inset 0 0 0 1px #b8d8c2}.day textarea::placeholder{color:#a0aaa1}.week-note{min-width:0;min-height:118px;border:1px dashed #cbd9ce;border-radius:9px;background:#fbfdfb;padding:5px;display:flex;flex-direction:column;gap:5px}.week-note-label{font-size:10px;color:var(--green2);font-weight:800}.week-note textarea{font:11px/1.35 inherit;font-family:inherit;resize:vertical;min-height:64px;width:100%;flex:1;border:0;outline:0;border-radius:5px;background:#f1f7f2;padding:5px;color:var(--ink)}.week-note textarea:focus{background:#e8f4eb;box-shadow:inset 0 0 0 1px #b8d8c2}.week-note textarea::placeholder{color:#a0aaa1}
-.side{position:sticky;top:82px;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow)}.side h2{font-size:19px;letter-spacing:-.5px;margin:0 0 5px}.side p{color:var(--muted);font-size:12px;margin:0 0 14px}.side label{font-weight:750;font-size:12px;display:block;margin-bottom:7px}.side textarea{width:100%;min-height:390px;resize:vertical;border:1px solid var(--line);border-radius:10px;background:#fbfcfa;padding:12px;font:13px/1.5 inherit;font-family:inherit;outline:0}.side textarea:focus{border-color:#9cc8a9;background:#fff}.side-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;color:var(--muted);font-size:11px}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.btn{border:1px solid var(--line);background:white;border-radius:9px;padding:9px 12px;font-weight:700;cursor:pointer;color:var(--ink)}.btn.primary{background:var(--green2);color:#fff;border-color:var(--green2)}.btn:hover{filter:brightness(.97)}
-.help{margin-top:16px;color:var(--muted);font-size:12px;line-height:1.55}.mobile-label{display:none}
-@media(max-width:1100px){.layout{grid-template-columns:1fr}.side{position:static}.side textarea{min-height:200px}.months{grid-template-columns:1fr}.month{padding:12px}.day{min-height:95px}.day textarea{min-height:45px}.week-note{min-height:95px}.week-note textarea{min-height:45px}.mobile-label{display:inline}}
-@media(min-width:1101px) and (max-width:1380px){.months{grid-template-columns:1fr}.day{min-height:95px}.day textarea{min-height:45px}.week-note{min-height:95px}.week-note textarea{min-height:45px}}
+.month-head{display:flex;justify-content:space-between;align-items:center;margin:0 0 12px}
+.month-head h2{font-size:18px;letter-spacing:-.5px;margin:0}
+.year{font-size:11px;color:var(--muted);background:#f2f5f1;padding:4px 7px;border-radius:7px}
+.weekdays,.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr)) minmax(74px,1.25fr);gap:4px}
+.weekdays div{text-align:center;font-size:10px;font-weight:800;color:var(--muted);padding:5px 0}
+.weekdays .week-note-head{color:var(--green2);background:var(--accent);border-radius:6px}
+.day{min-width:0;min-height:118px;border:1px solid var(--line);border-radius:9px;padding:5px;background:#fff;display:flex;flex-direction:column;gap:5px}
+.day.empty{background:transparent;border-color:transparent}
+.day.today{border-color:#6eae84;background:#fbfffc}
+.day-num{font-size:11px;font-weight:800;color:#536057}
+.day textarea,.week-note textarea{font-family:inherit;font-size:11px;line-height:1.35;resize:vertical;min-height:64px;width:100%;flex:1;border:0;outline:0;border-radius:5px;background:#f7f9f6;padding:5px;color:var(--ink)}
+.day textarea:focus{background:#eef7f0;box-shadow:inset 0 0 0 1px #b8d8c2}
+.week-note{min-width:0;min-height:118px;border:1px dashed #cbd9ce;border-radius:9px;background:#fbfdfb;padding:5px;display:flex;flex-direction:column;gap:5px}
+.week-note-label{font-size:10px;color:var(--green2);font-weight:800}
+.week-note textarea{background:#f1f7f2}
+.week-note textarea:focus{background:#e8f4eb;box-shadow:inset 0 0 0 1px #b8d8c2}
+textarea::placeholder{color:#a0aaa1}
+@media(max-width:1380px){
+  .months{grid-template-columns:1fr}
+  .day,.week-note{min-height:95px}
+  .day textarea,.week-note textarea{min-height:45px}
+}
+@media(max-width:600px){
+  .weekdays,.days{grid-template-columns:repeat(7,minmax(0,1fr))}
+  .weekdays .week-note-head{display:none}
+  .week-note{grid-column:1 / -1;min-height:80px}
+}
 </style>
 </head>
 <body>
 <header>
   <div class="brand">Daily<span>space</span> <span style="color:#9aa39a;font-weight:500">/ 2026</span></div>
+  <button class="btn primary" id="saveNow" type="button">Simpan</button>
+  <button class="btn" id="exportBtn" type="button">Ekspor</button>
+  <button class="btn" id="importBtn" type="button">Impor</button>
+  <input type="file" id="importFile" accept="application/json" hidden>
   <a class="toplink" href="https://pxnulis.vercel.app" target="_blank" rel="noopener noreferrer">pxnulis ↗</a>
   <a class="toplink" href="https://pxnulishandal.vercel.app" target="_blank" rel="noopener noreferrer">pxnulishandal ↗</a>
 </header>
+
 <main>
   <div class="intro">
-    <div><h1>Calendar workspace</h1><p>October — December 2026 · Tulis di kotak tanggal atau kotak mingguan di sisi kanan.</p></div>
+    <div>
+      <h1>Calendar workspace</h1>
+      <p>Oktober — Desember 2026 · Tulis di kotak tanggal atau kotak mingguan.</p>
+    </div>
     <div class="connection"><span id="statusDot" class="dot"></span><span id="statusText">Menyiapkan koneksi…</span></div>
   </div>
-  <div class="layout">
-    <section id="calendar" class="months" aria-label="Calendar October to December 2026"></section>
-
-  </div>
+  <section id="calendar" class="months" aria-label="Calendar October to December 2026"></section>
 </main>
+
 <script>
-/* 1) Isi dua nilai ini dari Supabase Project Settings → API.
-   Gunakan Project URL dan publishable key (atau legacy anon key), BUKAN service_role key. */
+/* Supabase: use the Project URL and the publishable (anon) key, NEVER the service_role key. */
 const SUPABASE_URL = "https://gjyeknwtoofpuvoaftfj.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_HBf14rn-fWP8AZ_OaLFfag_V6qNKjk5";
 const API_TABLE = "calendar_workspace";
 
-const $ = (s)=>document.querySelector(s);
-const statusText=$("#statusText"), statusDot=$("#statusDot"), notesStatus=$("#notesStatus");
-const state={entries:{},notes:""};
-let saveTimer=null, loading=true;
-const months=[{year:2026,month:9,name:"Oktober"},{year:2026,month:10,name:"November"},{year:2026,month:11,name:"Desember"}];
-const weekdays=["Min","Sen","Sel","Rab","Kam","Jum","Sab"];
-function setStatus(text,kind=""){statusText.textContent=text;statusDot.className="dot "+kind;}
-function dayKey(y,m,d){return `${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;}
-function buildCalendar(){
- const root=$("#calendar");
- months.forEach(({year,month,name})=>{
-   const card=document.createElement("section");card.className="month";
-   const head=document.createElement("div");head.className="month-head";
-   head.innerHTML=`<h2>${name}</h2><span class="year">${year}</span>`;card.append(head);
-   const wd=document.createElement("div");wd.className="weekdays";
-   weekdays.forEach(w=>{const el=document.createElement("div");el.textContent=w;wd.append(el)});
-   const noteHead=document.createElement("div");noteHead.className="week-note-head";noteHead.textContent="Mingguan";wd.append(noteHead);card.append(wd);
-   const days=document.createElement("div");days.className="days";
-   const first=new Date(year,month,1).getDay(), total=new Date(year,month+1,0).getDate();
-   const rows=Math.ceil((first+total)/7);
-   for(let week=0;week<rows;week++){
-     for(let col=0;col<7;col++){
-       const d=week*7+col-first+1;
-       if(d<1||d>total){const blank=document.createElement("div");blank.className="day empty";days.append(blank)}
-       else{
-         const key=dayKey(year,month,d), cell=document.createElement("div");cell.className="day";
-         const now=new Date();if(now.getFullYear()===year&&now.getMonth()===month&&now.getDate()===d)cell.classList.add("today");
-         const num=document.createElement("div");num.className="day-num";num.textContent=d;
-         const area=document.createElement("textarea");area.setAttribute("aria-label",`${d} ${name} ${year}`);area.placeholder="Tulis…";area.dataset.date=key;
-         area.addEventListener("input",()=>{state.entries[key]=area.value;scheduleSave()});
-         cell.append(num,area);days.append(cell);
-       }
-     }
-     const wkKey=`week-${year}-${String(month+1).padStart(2,"0")}-${week+1}`;
-     const wk=document.createElement("div");wk.className="week-note";
-     const label=document.createElement("div");label.className="week-note-label";label.textContent=`Minggu ${week+1}`;
-     const wkArea=document.createElement("textarea");wkArea.placeholder="Catatan…";wkArea.dataset.week=wkKey;wkArea.setAttribute("aria-label",`${name} minggu ${week+1}`);
-     wkArea.addEventListener("input",()=>{state.entries[wkKey]=wkArea.value;scheduleSave()});
-     wk.append(label,wkArea);days.append(wk);
-   }
-   card.append(days);root.append(card);
- });
+const $ = (s) => document.querySelector(s);
+const statusText = $("#statusText");
+const statusDot = $("#statusDot");
+
+const state = { entries: {}, notes: "" };
+let saveTimer = null;
+let canSave = false; // only true after a successful load, so a failed load can never overwrite cloud data
+
+const months = [
+  { year: 2026, month: 9,  name: "Oktober" },
+  { year: 2026, month: 10, name: "November" },
+  { year: 2026, month: 11, name: "Desember" }
+];
+const weekdays = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+
+function setStatus(text, kind = "") {
+  statusText.textContent = text;
+  statusDot.className = "dot " + kind;
 }
-function configReady(){return /^https:\/\/.+\.supabase\.co$/.test(SUPABASE_URL)&&SUPABASE_ANON_KEY.length>20&&!SUPABASE_ANON_KEY.includes("PASTE_")}
-async function request(path,options={}){
- const res=await fetch(`${SUPABASE_URL}/rest/v1/${path}`,{...options,headers:{
-  apikey:SUPABASE_ANON_KEY,Authorization:`Bearer ${SUPABASE_ANON_KEY}`,
-  "Content-Type":"application/json",Prefer:"resolution=merge-duplicates,return=minimal",...(options.headers||{})
- }});
- if(!res.ok){let msg=await res.text();throw new Error(`${res.status}: ${msg.slice(0,240)}`)}
- return res;
+
+function dayKey(y, m, d) {
+  return `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
 }
-async function loadData(){
- if(!configReady()){loading=false;setStatus("Isi konfigurasi Supabase","");notesStatus.textContent="Lokal saja sampai Supabase dikonfigurasi";return}
- try{
-  setStatus("Menghubungkan ke Supabase…");
-  const res=await request(`${API_TABLE}?id=eq.main&select=id,entries,notes`);
-  const rows=await res.json();
-  if(rows.length){state.entries=rows[0].entries||{};state.notes=rows[0].notes||""}
-  document.querySelectorAll("textarea[data-date], textarea[data-week]").forEach(el=>el.value=state.entries[el.dataset.date||el.dataset.week]||"");
-  setStatus("Terhubung · data tersimpan","ok");notesStatus.textContent="Data dimuat";loading=false;
- }catch(e){loading=false;setStatus("Koneksi gagal","bad");notesStatus.textContent=e.message;console.error(e)}
+
+function fillTextareas() {
+  document.querySelectorAll("textarea[data-key]").forEach((el) => {
+    el.value = state.entries[el.dataset.key] || "";
+  });
 }
-function scheduleSave(){if(loading)return;notesStatus.textContent="Perubahan belum disimpan…";clearTimeout(saveTimer);saveTimer=setTimeout(saveData,700)}
-async function saveData(){
- if(!configReady()){notesStatus.textContent="Belum tersimpan ke cloud — isi URL dan key";return}
- try{
-  notesStatus.textContent="Menyimpan…";
-  await request(`${API_TABLE}?on_conflict=id`,{method:"POST",body:JSON.stringify({id:"main",entries:state.entries,notes:state.notes,updated_at:new Date().toISOString()})});
-  notesStatus.textContent="Tersimpan · "+new Date().toLocaleTimeString("id-ID",{hour:"2-digit",minute:"2-digit"});
-  setStatus("Terhubung · data tersimpan","ok");
- }catch(e){notesStatus.textContent="Gagal menyimpan: "+e.message;setStatus("Gagal menyimpan","bad");console.error(e)}
+
+function onEdit(key, value) {
+  state.entries[key] = value;
+  scheduleSave();
 }
-$("#saveNow").addEventListener("click",saveData);
-$("#exportBtn").addEventListener("click",()=>{
- const data={format:"dailyspace-calendar-v1",entries:state.entries,notes:state.notes||""};
- const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
- const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="calendar-workspace-2026.json";a.click();URL.revokeObjectURL(a.href);
+
+function buildCalendar() {
+  const root = $("#calendar");
+  const now = new Date();
+
+  months.forEach(({ year, month, name }) => {
+    const card = document.createElement("section");
+    card.className = "month";
+
+    const head = document.createElement("div");
+    head.className = "month-head";
+    head.innerHTML = `<h2>${name}</h2><span class="year">${year}</span>`;
+    card.append(head);
+
+    const wd = document.createElement("div");
+    wd.className = "weekdays";
+    weekdays.forEach((w) => {
+      const el = document.createElement("div");
+      el.textContent = w;
+      wd.append(el);
+    });
+    const noteHead = document.createElement("div");
+    noteHead.className = "week-note-head";
+    noteHead.textContent = "Mingguan";
+    wd.append(noteHead);
+    card.append(wd);
+
+    const days = document.createElement("div");
+    days.className = "days";
+    const first = new Date(year, month, 1).getDay();
+    const total = new Date(year, month + 1, 0).getDate();
+    const rows = Math.ceil((first + total) / 7);
+
+    for (let week = 0; week < rows; week++) {
+      for (let col = 0; col < 7; col++) {
+        const d = week * 7 + col - first + 1;
+        if (d < 1 || d > total) {
+          const blank = document.createElement("div");
+          blank.className = "day empty";
+          days.append(blank);
+          continue;
+        }
+        const key = dayKey(year, month, d);
+        const cell = document.createElement("div");
+        cell.className = "day";
+        if (now.getFullYear() === year && now.getMonth() === month && now.getDate() === d) {
+          cell.classList.add("today");
+        }
+        const num = document.createElement("div");
+        num.className = "day-num";
+        num.textContent = d;
+        const area = document.createElement("textarea");
+        area.placeholder = "Tulis…";
+        area.dataset.key = key;
+        area.setAttribute("aria-label", `${d} ${name} ${year}`);
+        area.addEventListener("input", () => onEdit(key, area.value));
+        cell.append(num, area);
+        days.append(cell);
+      }
+
+      const wkKey = `week-${year}-${String(month + 1).padStart(2, "0")}-${week + 1}`;
+      const wk = document.createElement("div");
+      wk.className = "week-note";
+      const label = document.createElement("div");
+      label.className = "week-note-label";
+      label.textContent = `Minggu ${week + 1}`;
+      const wkArea = document.createElement("textarea");
+      wkArea.placeholder = "Catatan…";
+      wkArea.dataset.key = wkKey;
+      wkArea.setAttribute("aria-label", `${name} minggu ${week + 1}`);
+      wkArea.addEventListener("input", () => onEdit(wkKey, wkArea.value));
+      wk.append(label, wkArea);
+      days.append(wk);
+    }
+
+    card.append(days);
+    root.append(card);
+  });
+}
+
+function configReady() {
+  return /^https:\/\/.+\.supabase\.co$/.test(SUPABASE_URL) &&
+    SUPABASE_ANON_KEY.length > 20 &&
+    !SUPABASE_ANON_KEY.includes("PASTE_");
+}
+
+async function request(path, options = {}) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    ...options,
+    headers: {
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      "Content-Type": "application/json",
+      Prefer: "resolution=merge-duplicates,return=minimal",
+      ...(options.headers || {})
+    }
+  });
+  if (!res.ok) {
+    const msg = await res.text();
+    throw new Error(`${res.status}: ${msg.slice(0, 240)}`);
+  }
+  return res;
+}
+
+async function loadData() {
+  if (!configReady()) {
+    setStatus("Isi konfigurasi Supabase");
+    return;
+  }
+  try {
+    setStatus("Menghubungkan ke Supabase…");
+    const res = await request(`${API_TABLE}?id=eq.main&select=id,entries,notes`);
+    const rows = await res.json();
+    if (rows.length) {
+      state.entries = rows[0].entries || {};
+      state.notes = rows[0].notes || "";
+    }
+    fillTextareas();
+    canSave = true;
+    setStatus("Terhubung · data dimuat", "ok");
+  } catch (e) {
+    setStatus("Koneksi gagal: " + e.message, "bad");
+    console.error(e);
+  }
+}
+
+function scheduleSave() {
+  if (!canSave) return;
+  setStatus("Perubahan belum disimpan…");
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveData, 700);
+}
+
+async function saveData() {
+  if (!configReady()) {
+    setStatus("Belum tersimpan ke cloud — isi URL dan key", "bad");
+    return;
+  }
+  if (!canSave) {
+    setStatus("Tidak bisa menyimpan: data belum berhasil dimuat", "bad");
+    return;
+  }
+  try {
+    setStatus("Menyimpan…");
+    await request(`${API_TABLE}?on_conflict=id`, {
+      method: "POST",
+      body: JSON.stringify({
+        id: "main",
+        entries: state.entries,
+        notes: state.notes,
+        updated_at: new Date().toISOString()
+      })
+    });
+    const t = new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
+    setStatus("Tersimpan · " + t, "ok");
+  } catch (e) {
+    setStatus("Gagal menyimpan: " + e.message, "bad");
+    console.error(e);
+  }
+}
+
+/* Buttons: each handler is guarded, so a missing element can never stop the calendar from rendering. */
+$("#saveNow")?.addEventListener("click", () => { clearTimeout(saveTimer); saveData(); });
+
+$("#exportBtn")?.addEventListener("click", () => {
+  const data = { format: "dailyspace-calendar-v1", entries: state.entries, notes: state.notes || "" };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "calendar-workspace-2026.json";
+  a.click();
+  URL.revokeObjectURL(a.href);
 });
-$("#importBtn").addEventListener("click",()=>$("#importFile").click());
-$("#importFile").addEventListener("change",async e=>{
- const file=e.target.files[0];if(!file)return;
- try{const data=JSON.parse(await file.text());if(!data||typeof data!=="object")throw Error("Format tidak valid");
- state.entries=data.entries||{};state.notes=data.notes||"";
- document.querySelectorAll("textarea[data-date], textarea[data-week]").forEach(el=>el.value=state.entries[el.dataset.date||el.dataset.week]||"");
- scheduleSave();notesStatus.textContent="File diimpor";
- }catch(err){alert("Tidak bisa membaca JSON: "+err.message)}finally{e.target.value=""}
+
+$("#importBtn")?.addEventListener("click", () => $("#importFile")?.click());
+
+$("#importFile")?.addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    const data = JSON.parse(await file.text());
+    if (!data || typeof data !== "object") throw new Error("Format tidak valid");
+    state.entries = data.entries || {};
+    state.notes = data.notes || "";
+    fillTextareas();
+    scheduleSave();
+    setStatus("File diimpor");
+  } catch (err) {
+    alert("Tidak bisa membaca JSON: " + err.message);
+  } finally {
+    e.target.value = "";
+  }
 });
-buildCalendar();loadData();
+
+buildCalendar();
+loadData();
 </script>
 </body>
 </html>
