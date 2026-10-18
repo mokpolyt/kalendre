@@ -58,6 +58,12 @@ main{max-width:1600px;margin:0 auto;padding:24px clamp(12px,2vw,28px) 50px}
 .week-note textarea:focus,.week-note textarea.sel{background:#e8f4eb;box-shadow:inset 0 0 0 1px #b8d8c2}
 .day textarea::placeholder,.week-note textarea::placeholder{color:#a0aaa1}
 
+/* Locked (past) days */
+.day.locked{background:#f3f5f2;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+.day.locked textarea{cursor:pointer;resize:none;color:#7b847c;background:#eceeeb}
+.lock-badge{font-size:10px;font-weight:800;color:var(--muted);margin-left:4px}
+.day-num{display:flex;align-items:center}
+
 /* Post-its */
 #postitLayer{position:absolute;inset:0;pointer-events:none;overflow:hidden}
 .postit{position:absolute;width:96px;height:96px;pointer-events:auto;display:flex;flex-direction:column;border-radius:2px 2px 16px 2px;box-shadow:0 6px 14px rgba(0,0,0,.18),0 1px 2px rgba(0,0,0,.12);z-index:20}
@@ -223,6 +229,32 @@ function selectCell(area, label) {
   syncControls();
 }
 
+/* Past days are read-only until tapped UNLOCK_TAPS times (taps reset after 4s idle). Unlock lasts until reload. */
+const UNLOCK_TAPS = 12;
+function lockDay(cell, area, num) {
+  area.readOnly = true;
+  cell.classList.add("locked");
+  const badge = document.createElement("span");
+  badge.className = "lock-badge";
+  badge.textContent = "🔒";
+  num.append(badge);
+  let taps = 0, timer = null;
+  cell.addEventListener("click", () => {
+    if (!cell.classList.contains("locked")) return;
+    taps++;
+    clearTimeout(timer);
+    if (taps >= UNLOCK_TAPS) {
+      cell.classList.remove("locked");
+      area.readOnly = false;
+      badge.remove();
+      area.focus();
+      return;
+    }
+    badge.textContent = `🔒 ${taps}/${UNLOCK_TAPS}`;
+    timer = setTimeout(() => { taps = 0; badge.textContent = "🔒"; }, 4000);
+  });
+}
+
 function buildCalendar() {
   const root = $("#calendar");
   const now = new Date();
@@ -281,6 +313,9 @@ function buildCalendar() {
         area.addEventListener("input", () => onEdit(key, area.value));
         area.addEventListener("focus", () => selectCell(area, label));
         cell.append(num, area);
+        const dayStart = new Date(year, month, d);
+        const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        if (dayStart < todayStart) lockDay(cell, area, num);
         days.append(cell);
       }
 
